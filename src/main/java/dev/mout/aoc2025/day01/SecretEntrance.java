@@ -62,10 +62,10 @@ public class SecretEntrance {
         return direction == DIRECTION_RIGHT ? distance : -distance;
     }
 
-    static void main() {
+    public static void main(String[] args) {
         var movements = InputSupport.readAndParseLines(1, SecretEntrance::parseInstruction);
         var secretEntrance = new SecretEntrance(movements);
-        System.out.printf("Part 1: %d\n", secretEntrance.part1());
-        System.out.printf("Part 2: %d\n", secretEntrance.part2());
+        System.out.printf("Part 1: %d%n", secretEntrance.part1());
+        System.out.printf("Part 2: %d%n", secretEntrance.part2());
     }
 }
