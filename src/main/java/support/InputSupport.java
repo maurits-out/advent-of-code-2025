@@ -6,7 +6,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Function;
 
@@ -18,6 +17,15 @@ public class InputSupport {
         var uri = buildInputUri(day);
         try (var lines = Files.lines(Path.of(uri))) {
             return lines.map(parser).toList();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public static List<String> readLines(int day) {
+        var uri = buildInputUri(day);
+        try {
+            return Files.readAllLines(Path.of(uri));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
