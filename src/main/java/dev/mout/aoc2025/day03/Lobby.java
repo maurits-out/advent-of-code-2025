@@ -6,46 +6,51 @@ import java.util.List;
 
 public class Lobby {
 
-    private final List<String> banks;
+    private final List<String> batteryBanks;
 
-    private Lobby(List<String> banks) {
-        this.banks = banks;
+    private Lobby(List<String> batteryBanks) {
+        this.batteryBanks = batteryBanks;
     }
 
-    private int part1() {
-        return banks.stream().mapToInt(this::largestPossibleJoltage).sum();
+    private long part1() {
+        return sumLargestPossibleJoltagse(2);
     }
 
-    private int largestPossibleJoltage(String bank) {
-        var firstBattery = 0;
-        var firstIndex = -1;
+    private long part2() {
+        return sumLargestPossibleJoltagse(12);
+    }
 
-        for (var i = 0; i < bank.length() - 1; i++) {
-            var joltage = digitAt(bank, i);
-            if (joltage > firstBattery) {
-                firstBattery = joltage;
-                firstIndex = i;
+    private long sumLargestPossibleJoltagse(int batteriesToActivate) {
+        return batteryBanks.stream()
+                .mapToLong(bank -> largestPossibleJoltage(bank, batteriesToActivate))
+                .sum();
+    }
+
+    private long largestPossibleJoltage(String bank, int batteriesToActivate) {
+        var startIndex = 0;
+        var result = 0L;
+        for (var i = 0; i < batteriesToActivate; i++) {
+            var maxJoltage = 0;
+            var remainingBatteries = batteriesToActivate - i - 1;
+            var searchLimit = bank.length() - remainingBatteries;
+            var bestIndex = startIndex;
+            for (var j = startIndex; j < searchLimit; j++) {
+                var joltage = bank.charAt(j) - '0';
+                if (joltage > maxJoltage) {
+                    maxJoltage = joltage;
+                    bestIndex = j;
+                }
             }
+            startIndex = bestIndex + 1;
+            result = (result * 10) + maxJoltage;
         }
-
-        var secondBattery = 0;
-        for (var i = firstIndex + 1; i < bank.length(); i++) {
-            var joltage = digitAt(bank, i);
-            if (joltage > secondBattery) {
-                secondBattery = joltage;
-            }
-        }
-
-        return firstBattery * 10 + secondBattery;
-    }
-
-    private static int digitAt(String bank, int index) {
-        return bank.charAt(index) - '0';
+        return result;
     }
 
     public static void main(String[] args) {
-        List<String> banks = InputSupport.readLines(3);
-        Lobby lobby = new Lobby(banks);
+        List<String> batteryBanks = InputSupport.readLines(3);
+        var lobby = new Lobby(batteryBanks);
         System.out.printf("Part 1: %d%n", lobby.part1());
+        System.out.printf("Part 2: %d%n", lobby.part2());
     }
 }
