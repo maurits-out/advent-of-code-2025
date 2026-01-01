@@ -21,7 +21,8 @@ public class Lobby {
     }
 
     private long sumLargestPossibleJoltagse(int batteriesToActivate) {
-        return batteryBanks.stream()
+        return batteryBanks
+                .parallelStream()
                 .mapToLong(bank -> largestPossibleJoltage(bank, batteriesToActivate))
                 .sum();
     }
