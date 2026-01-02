@@ -4,7 +4,7 @@ import support.InputSupport;
 
 import java.util.List;
 
-public class Lobby {
+class Lobby {
 
     private final List<String> batteryBanks;
 

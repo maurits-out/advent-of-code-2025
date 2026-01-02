@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparingLong;
 
-public class Cafeteria {
+class Cafeteria {
 
     private final Set<Range> ranges;
     private final Set<Long> ids;

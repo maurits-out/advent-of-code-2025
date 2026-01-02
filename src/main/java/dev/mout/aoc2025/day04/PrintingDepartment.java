@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class PrintingDepartment {
+class PrintingDepartment {
 
     private static final List<Location> OFFSETS = List.of(
             new Location(-1, -1), new Location(-1, 0), new Location(-1, 1),

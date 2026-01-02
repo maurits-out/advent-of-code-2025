@@ -4,7 +4,7 @@ import support.InputSupport;
 
 import java.util.List;
 
-public class SecretEntrance {
+class SecretEntrance {
 
     private static final char DIRECTION_RIGHT = 'R';
     private static final int START_POSITION = 50;

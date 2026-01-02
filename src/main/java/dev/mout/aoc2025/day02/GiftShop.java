@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.LongStream;
 
-public class GiftShop {
+class GiftShop {
 
     private final List<IdRange> idRanges;
 
