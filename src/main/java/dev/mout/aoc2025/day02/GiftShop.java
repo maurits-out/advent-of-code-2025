@@ -24,8 +24,7 @@ class GiftShop {
     }
 
     private long sumInvalidIds(Pattern pattern) {
-        return idRanges
-                .parallelStream()
+        return idRanges.parallelStream()
                 .flatMapToLong(range -> LongStream.rangeClosed(range.firstId(), range.lastId()))
                 .filter(id -> pattern.matcher(Long.toString(id)).matches())
                 .sum();
