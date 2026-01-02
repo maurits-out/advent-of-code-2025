@@ -3,15 +3,17 @@ package dev.mout.aoc2025.day05;
 import support.InputSupport;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparingLong;
 
 public class Cafeteria {
 
-    private final List<Range> ranges;
-    private final List<Long> ids;
+    private final Set<Range> ranges;
+    private final Set<Long> ids;
 
-    private Cafeteria(List<Range> ranges, List<Long> ids) {
+    private Cafeteria(Set<Range> ranges, Set<Long> ids) {
         this.ranges = ranges;
         this.ids = ids;
     }
@@ -21,7 +23,7 @@ public class Cafeteria {
     }
 
     private long part2() {
-        var sortedRanges = ranges.stream().sorted(comparingLong(Range::from)).toList();
+        List<Range> sortedRanges = ranges.stream().sorted(comparingLong(Range::from)).toList();
         long count = 0;
         long last = sortedRanges.getFirst().from() - 1;
         for (Range current : sortedRanges) {
@@ -49,16 +51,16 @@ public class Cafeteria {
         }
     }
 
-    private static List<Long> parseIds(String section) {
+    private static Set<Long> parseIds(String section) {
         return section.lines()
                 .map(Long::parseLong)
-                .toList();
+                .collect(Collectors.toSet());
     }
 
-    private static List<Range> parseRanges(String ranges) {
+    private static Set<Range> parseRanges(String ranges) {
         return ranges.lines()
                 .map(Cafeteria::parseRange)
-                .toList();
+                .collect(Collectors.toSet());
     }
 
     private static Range parseRange(String line) {
@@ -70,8 +72,8 @@ public class Cafeteria {
 
     public static void main(String[] args) {
         List<String> sections = InputSupport.readSections(5);
-        List<Range> ranges = parseRanges(sections.getFirst());
-        List<Long> ids = parseIds(sections.getLast());
+        Set<Range> ranges = parseRanges(sections.getFirst());
+        Set<Long> ids = parseIds(sections.getLast());
         var cafeteria = new Cafeteria(ranges, ids);
         System.out.printf("Part 1: %d%n", cafeteria.part1());
         System.out.printf("Part 2: %d%n", cafeteria.part2());
