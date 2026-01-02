@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -29,6 +30,10 @@ public class InputSupport {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    public static List<String> readSections(int day) {
+        return Arrays.asList(readString(day).split("\\R\\R+"));
     }
 
     public static String readString(int day) {
