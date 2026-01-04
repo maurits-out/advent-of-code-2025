@@ -16,14 +16,14 @@ class TrashCompactor {
     }
 
     private long part1() {
-        return calculateGrantTotal(this::convertPart1);
+        return calculateGrandTotal(this::convertPart1);
     }
 
     private long part2() {
-        return calculateGrantTotal(this::convertPart2);
+        return calculateGrandTotal(this::convertPart2);
     }
 
-    private long calculateGrantTotal(Function<List<String>, List<Integer>> converter) {
+    private long calculateGrandTotal(Function<List<String>, List<Integer>> converter) {
         return columns.stream()
                 .mapToLong(column -> {
                     List<Integer> numbers = converter.apply(column.values());
@@ -56,7 +56,7 @@ class TrashCompactor {
     }
 
     private long applyOperator(char operator, List<Integer> arguments) {
-        LongStream stream = arguments.stream().mapToLong(a -> a);
+        LongStream stream = arguments.stream().mapToLong(Integer::longValue);
         return switch (operator) {
             case '+' -> stream.reduce(0, Long::sum);
             case '*' -> stream.reduce(1, (a, b) -> a * b);
@@ -71,19 +71,19 @@ class TrashCompactor {
         List<String> numberLines = lines.subList(0, lines.size() - 1);
         String operatorLine = lines.getLast();
         char currentOperator = operatorLine.charAt(0);
-        int offsetCurrentOperator = 0;
-        int offset = 1;
+        int colStart = 0;
+        int colEndExclusive = 1;
         List<Column> columns = new ArrayList<>();
-        while (offset < operatorLine.length()) {
-            char ch = operatorLine.charAt(offset);
+        while (colEndExclusive < operatorLine.length()) {
+            char ch = operatorLine.charAt(colEndExclusive);
             if (ch != ' ') {
-                columns.add(createColumn(numberLines, offsetCurrentOperator, offset - 1, currentOperator));
+                columns.add(createColumn(numberLines, colStart, colEndExclusive - 1, currentOperator));
                 currentOperator = ch;
-                offsetCurrentOperator = offset;
+                colStart = colEndExclusive;
             }
-            offset++;
+            colEndExclusive++;
         }
-        columns.add(createColumn(numberLines, offsetCurrentOperator, offset, currentOperator));
+        columns.add(createColumn(numberLines, colStart, colEndExclusive, currentOperator));
         return columns;
     }
 
