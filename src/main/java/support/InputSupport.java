@@ -14,6 +14,10 @@ public class InputSupport {
 
     private static final String INPUT_PATH_TEMPLATE = "/day%02d.txt";
 
+    public static char[][] readAsGrid(int day) {
+        return readAndParseLines(day, String::toCharArray).toArray(new char[0][]);
+    }
+
     public static <T> List<T> readAndParseLines(int day, Function<String, T> parser) {
         var uri = buildInputUri(day);
         try (var lines = Files.lines(Path.of(uri))) {
