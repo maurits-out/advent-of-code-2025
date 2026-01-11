@@ -16,41 +16,38 @@ class Laboratories {
         this.height = diagram.length;
         this.width = diagram[0].length;
         this.startCol = findStartColumnOnTopRow();
+        this.diagram[0][startCol] = '.';
     }
 
     private int part1() {
+        int splitCount = 0;
         Location start = new Location(0, startCol);
         Deque<Location> stack = new LinkedList<>();
-        stack.push(start);
         Set<Location> visited = new HashSet<>();
+        stack.push(start);
         visited.add(start);
-        int splitCount = 0;
 
         while (!stack.isEmpty()) {
             Location location = stack.pop();
             char ch = diagram[location.row][location.column];
-            switch (ch) {
-                case 'S', '.':
-                    if (location.row < diagram.length - 1) {
-                        Location down = location.down();
-                        if (!visited.contains(down)) {
-                            stack.push(down);
-                            visited.add(down);
-                        }
-                    }
-                    break;
-                case '^':
-                    Location left = location.left();
-                    if (!visited.contains(left)) {
-                        stack.push(left);
-                        visited.add(left);
-                    }
-                    Location right = location.right();
-                    if (!visited.contains(right)) {
-                        stack.push(right);
-                        visited.add(right);
-                    }
-                    splitCount++;
+            if (ch == '.' && location.row < diagram.length - 1) {
+                Location down = location.down();
+                if (!visited.contains(down)) {
+                    stack.push(down);
+                    visited.add(down);
+                }
+            } else if (ch == '^') {
+                Location left = location.left();
+                if (!visited.contains(left)) {
+                    stack.push(left);
+                    visited.add(left);
+                }
+                Location right = location.right();
+                if (!visited.contains(right)) {
+                    stack.push(right);
+                    visited.add(right);
+                }
+                splitCount++;
             }
         }
 
@@ -63,7 +60,7 @@ class Laboratories {
         for (int r = 1; r < height; r++) {
             for (int c = 0; c < width; c++) {
                 if (diagram[r][c] == '.') {
-                    if (diagram[r - 1][c] == '.' || diagram[r - 1][c] == 'S') {
+                    if (diagram[r - 1][c] == '.') {
                         res[r][c] = res[r - 1][c];
                     }
                     if (c > 0 && diagram[r][c - 1] == '^') {
