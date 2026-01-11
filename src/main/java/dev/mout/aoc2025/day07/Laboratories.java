@@ -15,7 +15,7 @@ class Laboratories {
         this.diagram = diagram;
         this.height = diagram.length;
         this.width = diagram[0].length;
-        this.startCol = findStartColumnOnTopRow();
+        this.startCol = width / 2;
         this.diagram[0][startCol] = '.';
     }
 
@@ -73,14 +73,6 @@ class Laboratories {
             }
         }
         return Arrays.stream(res[height - 1]).sum();
-    }
-
-    private int findStartColumnOnTopRow() {
-        int c = 0;
-        while (diagram[0][c] != 'S') {
-            c++;
-        }
-        return c;
     }
 
     private record Location(int row, int column) {
