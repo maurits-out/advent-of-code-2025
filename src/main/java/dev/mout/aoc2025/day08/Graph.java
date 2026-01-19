@@ -27,6 +27,12 @@ class Graph<V> {
         return components;
     }
 
+    boolean hasOneComponent() {
+        V start = adjacencyList.keySet().iterator().next();
+        Set<V> component = getComponent(start);
+        return component.size() == adjacencyList.size();
+    }
+
     private Set<V> getComponent(V start) {
         Set<V> component = new HashSet<>();
         Set<V> visited = new HashSet<>();

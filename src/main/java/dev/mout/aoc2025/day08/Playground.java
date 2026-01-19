@@ -37,7 +37,7 @@ class Playground {
         do {
             pair = iterator.next();
             graph.addEdge(pair.first(), pair.second());
-        } while (graph.getComponents().size() > 1);
+        } while (!graph.hasOneComponent());
         return (long) pair.first().x * pair.second().x;
     }
 
@@ -45,7 +45,7 @@ class Playground {
         return IntStream.range(0, boxes.size() - 1)
                 .boxed()
                 .flatMap(i -> IntStream.range(i + 1, boxes.size())
-                        .mapToObj(j -> new Pair<>(boxes.get(j), boxes.get(i))))
+                        .mapToObj(j -> new Pair<>(boxes.get(i), boxes.get(j))))
                 .sorted(Comparator.comparingDouble(pair -> pair.first().distanceTo(pair.second())))
                 .toList();
     }
