@@ -1,6 +1,7 @@
 package dev.mout.aoc2025.day08;
 
 import support.InputSupport;
+import support.Pair;
 
 import java.util.Comparator;
 import java.util.Iterator;
