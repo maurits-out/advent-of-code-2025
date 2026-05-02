@@ -21,7 +21,7 @@ public class InputSupport {
     public static <T> List<T> readAndParseLines(int day, Function<String, T> parser) {
         var uri = buildInputUri(day);
         try (var lines = Files.lines(Path.of(uri))) {
-            return lines.map(parser).toList();
+            return lines.parallel().map(parser).toList();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
