@@ -3,8 +3,9 @@ package dev.mout.aoc2025.day10;
 import dev.mout.aoc2025.day10.Machine.Button;
 import support.InputSupport;
 
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.*;
+
+import static java.util.stream.Collectors.toSet;
 
 public class Factory {
 
@@ -21,41 +22,35 @@ public class Factory {
     }
 
     private int countFewestPresses(Machine machine) {
-        BFSTemplate<String> bfs = new BFSTemplate<>() {
-            @Override
-            String startState() {
-                return machine.allLightsOff();
-            }
+        String start = machine.allLightsOff();
+        Queue<String> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        Map<String, Integer> distance = new HashMap<>();
 
-            @Override
-            boolean isTarget(String state) {
-                return state.equals(machine.targetIndicatorLights());
-            }
+        queue.offer(start);
+        visited.add(start);
+        distance.put(start, 0);
 
-            @Override
-            Stream<String> neighbors(String current) {
-                return machine.buttons().stream().map(button -> press(button, current));
+        while (!queue.isEmpty()) {
+            String current = queue.poll();
+            Integer distanceOfCurrent = distance.get(current);
+            if (current.equals(machine.targetIndicatorLights())) {
+                return distanceOfCurrent;
             }
+            unvisitedNeighbors(current, visited, machine.buttons()).forEach(neighbor -> {
+                visited.add(neighbor);
+                distance.put(neighbor, distanceOfCurrent + 1);
+                queue.offer(neighbor);
+            });
+        }
+        throw new IllegalStateException("No sequence exists");
+    }
 
-            private String press(Button button, String indicatorLights) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < indicatorLights.length(); i++) {
-                    sb.append(switchIfWired(indicatorLights.charAt(i), button.wiring().contains(i)));
-                }
-                return sb.toString();
-            }
-
-            private char switchIfWired(char current, boolean isWired) {
-                if (isWired) {
-                    if (current == '.') {
-                        return '#';
-                    }
-                    return '.';
-                }
-                return current;
-            }
-        };
-        return bfs.minimalDistance();
+    private Set<String> unvisitedNeighbors(String current, Set<String> visited, Set<Button> buttons) {
+        return buttons.stream()
+                .map(button -> button.apply(current))
+                .filter(neighbor -> !visited.contains(neighbor))
+                .collect(toSet());
     }
 
     public static void main(String[] args) {
