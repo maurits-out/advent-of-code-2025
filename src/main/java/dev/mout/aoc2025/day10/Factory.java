@@ -5,6 +5,8 @@ import support.InputSupport;
 
 import java.util.*;
 
+import static java.util.Arrays.stream;
+
 class Factory {
 
     private final List<Machine> machines;
@@ -30,18 +32,18 @@ class Factory {
 
         while (!queue.isEmpty()) {
             int current = queue.poll();
-            int distanceOfCurrent = distance.get(current);
+            int distanceToCurrent = distance.get(current);
             if (current == machine.targetIndicatorLights()) {
-                return distanceOfCurrent;
+                return distanceToCurrent;
             }
-            for (int button : machine.buttons()) {
-                int next = current ^ button;
-                if (!visited.contains(next)) {
-                    visited.add(next);
-                    distance.put(next, distanceOfCurrent + 1);
-                    queue.offer(next);
-                }
-            }
+            stream(machine.buttons())
+                    .map(button -> current ^ button)
+                    .filter(next -> !visited.contains(next))
+                    .forEach(next -> {
+                        visited.add(next);
+                        distance.put(next, distanceToCurrent + 1);
+                        queue.offer(next);
+                    });
         }
         throw new IllegalStateException("No path exists");
     }

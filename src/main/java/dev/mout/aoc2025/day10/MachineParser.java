@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Arrays.stream;
+import static java.util.stream.IntStream.range;
 
 class MachineParser {
 
@@ -20,13 +21,9 @@ class MachineParser {
     }
 
     private int parseIndicatorLights(String part) {
-        int v = 0;
-        for (int i = 0; i < part.length() - 2; i++) {
-            if (part.charAt(i + 1) == '#') {
-                v |= 1 << i;
-            }
-        }
-        return v;
+        return range(0, part.length() - 2)
+                .filter(i -> part.charAt(i + 1) == '#')
+                .reduce(0, (acc, i) -> acc | (1 << i));
     }
 
     private int[] parseButtons(String[] parts) {
