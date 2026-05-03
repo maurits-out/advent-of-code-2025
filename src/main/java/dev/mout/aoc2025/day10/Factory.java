@@ -1,13 +1,11 @@
 package dev.mout.aoc2025.day10;
 
-import dev.mout.aoc2025.day10.Machine.Button;
+import dev.mout.aoc2025.day10.MachineParser.Machine;
 import support.InputSupport;
 
 import java.util.*;
 
-import static java.util.stream.Collectors.toSet;
-
-public class Factory {
+class Factory {
 
     private final List<Machine> machines;
 
@@ -22,35 +20,30 @@ public class Factory {
     }
 
     private int countFewestPresses(Machine machine) {
-        String start = machine.allLightsOff();
-        Queue<String> queue = new LinkedList<>();
-        Set<String> visited = new HashSet<>();
-        Map<String, Integer> distance = new HashMap<>();
+        Queue<Integer> queue = new LinkedList<>();
+        Set<Integer> visited = new HashSet<>();
+        Map<Integer, Integer> distance = new HashMap<>();
 
-        queue.offer(start);
-        visited.add(start);
-        distance.put(start, 0);
+        queue.offer(0);
+        visited.add(0);
+        distance.put(0, 0);
 
         while (!queue.isEmpty()) {
-            String current = queue.poll();
-            Integer distanceOfCurrent = distance.get(current);
-            if (current.equals(machine.targetIndicatorLights())) {
+            int current = queue.poll();
+            int distanceOfCurrent = distance.get(current);
+            if (current == machine.targetIndicatorLights()) {
                 return distanceOfCurrent;
             }
-            unvisitedNeighbors(current, visited, machine.buttons()).forEach(neighbor -> {
-                visited.add(neighbor);
-                distance.put(neighbor, distanceOfCurrent + 1);
-                queue.offer(neighbor);
-            });
+            for (int button : machine.buttons()) {
+                int next = current ^ button;
+                if (!visited.contains(next)) {
+                    visited.add(next);
+                    distance.put(next, distanceOfCurrent + 1);
+                    queue.offer(next);
+                }
+            }
         }
-        throw new IllegalStateException("No sequence exists");
-    }
-
-    private Set<String> unvisitedNeighbors(String current, Set<String> visited, Set<Button> buttons) {
-        return buttons.stream()
-                .map(button -> button.apply(current))
-                .filter(neighbor -> !visited.contains(neighbor))
-                .collect(toSet());
+        throw new IllegalStateException("No path exists");
     }
 
     public static void main(String[] args) {
